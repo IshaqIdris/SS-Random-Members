@@ -23,10 +23,10 @@ class UserPageController extends PageController
      *
      * @var array
      */
-    // private static $allowed_actions =
-    // [
-    //     'randomUser'
-    // ];
+    private static $allowed_actions =
+    [
+        'randomUser'
+    ];
 
 
     /**
@@ -54,7 +54,7 @@ class UserPageController extends PageController
             $response = $this->client->get('https://randomuser.me/api/')->getBody();
             $user_data = json_decode($response, true)['results'][0];
             $new_user = Member::create();
-            $new_user->Firstname = Convert::raw2sql(ucfirst($user_data['name']['first']));
+            $new_user->FirstName = Convert::raw2sql(ucfirst($user_data['name']['first']));
             $new_user->Surname = Convert::raw2sql(ucfirst($user_data['name']['last']));
             $new_user->Email = Convert::raw2sql($user_data['email']);
             $new_user->Cell = Convert::raw2sql($user_data['cell']);
@@ -73,7 +73,7 @@ class UserPageController extends PageController
                     // 'MediumPhoto' => $user_data['picture']['medium'],
                     // 'SmallPhoto' => $user_data['picture']['thumbnail'],
 
-                    'User' => $new_user,
+                    'User' => Member::get(),
                     'Test' => 'This is a test'
                  ]
             )->renderWith([static::class, Page::class]);

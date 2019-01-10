@@ -1,9 +1,9 @@
-# ---
-# Name: approutes
-# After:
-#  - '#rootroutes'
-#  - '#coreroutes'
-# ---
-# SilverStripe\Control\Director:
-#   rules:
-#     'user//$Action': 'App\Controller\UserPageController'
+---
+Name: approutes
+After:
+ - '#rootroutes'
+ - '#coreroutes'
+---
+SilverStripe\Control\Director:
+  rules:
+    'user//$Action': 'App\Controller\UserPageController'
