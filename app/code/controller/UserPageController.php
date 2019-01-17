@@ -13,6 +13,41 @@ use Intervention\Image\Exception\RuntimeException;
 
 class UserPageController extends PageController
 {
+    private $user_data;
+
+    private $new_user;
+
+    public function init()
+    {
+        var_dump("hello");
+        parent::init();
+        //$this->json_decode(setUserData($this->client->get('https://randomuser.me/api/')->getBody(), true)['results'][0]);
+    }
+
+    public function getUserData()
+    {
+        try {
+            $response = $this->client->get('https://randomuser.me/api/');
+        } catch (Exception $e) {
+            $this->httpError($e->getCode(), $e->getMessage() );
+        }
+
+
+        if($response->getStatusCode() != 200) {
+            var_dump("Hello");
+            $this->httpError($response->getStatusCode(), $response->getReasonPhrase() );
+        }
+
+
+        $data = json_decode($response->getBody(), true)['results'][0];
+
+        if (empty($data)) {
+            throw new Exception("No Data");
+        }
+
+        return $data;
+    }
+
     private static $dependencies =
     [
         'client' => '%$GeneratedClient',
@@ -32,12 +67,33 @@ class UserPageController extends PageController
     /**
      * Get users
      *
-     * @return void
+     * @return array
      */
     public function getUsers()
     {
-        var_dump(test);
+
         return Member::get();
+    }
+
+    /**
+     * Get created user
+     *
+     * @return Member
+     */
+    public function getMember()
+    {
+        return $this->new_user;
+    }
+
+    /**
+     * Set data to be read for users
+     *
+     * @param array $data
+     * @return void
+     */
+    public function setUserData($data)
+    {
+            $user_data = $data;
     }
 
     /**
@@ -48,11 +104,7 @@ class UserPageController extends PageController
     public function randomUser()
     {
         try {
-
             //look at convert class
-
-            $response = $this->client->get('https://randomuser.me/api/')->getBody();
-            $user_data = json_decode($response, true)['results'][0];
             $new_user = Member::create();
             $new_user->FirstName = Convert::raw2sql(ucfirst($user_data['name']['first']));
             $new_user->Surname = Convert::raw2sql(ucfirst($user_data['name']['last']));
@@ -65,20 +117,12 @@ class UserPageController extends PageController
 
             return $this->customise(
                 [
-                    // 'FirstName' => ucfirst($user_data['name']['first']),
-                    // 'LastName' => ucfirst($user_data['name']['last']),
-                    // 'Email' => $user_data['email'],
-                    // 'CellNo' => $user_data['cell'],
-                    // 'LargePhoto' => $user_data['picture']['large'],
-                    // 'MediumPhoto' => $user_data['picture']['medium'],
-                    // 'SmallPhoto' => $user_data['picture']['thumbnail'],
-
-                    'User' => Member::get(),
+                    'User' => $this->getUsers(),
                     'Test' => 'This is a test'
                  ]
             )->renderWith([static::class, Page::class]);
 
-        } catch (RuntimeException $e) {
+        } catch (Exception $e) {
             echo 'Well thats a rip';
         }
     }
