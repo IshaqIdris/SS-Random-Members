@@ -18,6 +18,7 @@ class UserTests extends SapphireTest
     {
         parent::setUp();
         $this->history=[];
+        $this->createMockMember();
     }
 
     /**
@@ -72,9 +73,10 @@ class UserTests extends SapphireTest
      */
     public function testUpdateMember()
     {
+        var_dump($this->user_data);
         $c = UserPageController::create();
         $c->setUserData($this->user_data);
-
+        $c->randomUser();
         $member = $c->getMember();
         var_dump($member->FirstName);
 
@@ -82,7 +84,7 @@ class UserTests extends SapphireTest
         $this->assertEquals($member->Surname, $this->user_data['name']['last']);
         $this->assertEquals($member->Email, $this->user_data['email']);
         $this->assertEquals($member->Cell, $this->user_data['cell']);
-        $this->assertEquals($member->ProfilePic, $this->user_data['picture']['large']);
+        $this->assertEquals($member->Photo, $this->user_data['picture']['large']);
         $this->assertNotNull($member->ID);
 
         $member->delete();

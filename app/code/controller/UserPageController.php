@@ -93,7 +93,7 @@ class UserPageController extends PageController
      */
     public function setUserData($data)
     {
-            $user_data = $data;
+            $this->user_data = $data;
     }
 
     /**
@@ -103,17 +103,17 @@ class UserPageController extends PageController
      */
     public function randomUser()
     {
+        var_dump("got in generate users");
         try {
             //look at convert class
             $new_user = Member::create();
-            $new_user->FirstName = Convert::raw2sql(ucfirst($user_data['name']['first']));
-            $new_user->Surname = Convert::raw2sql(ucfirst($user_data['name']['last']));
-            $new_user->Email = Convert::raw2sql($user_data['email']);
-            $new_user->Cell = Convert::raw2sql($user_data['cell']);
-            $new_user->Photo = Convert::raw2sql($user_data['picture']['large']);
+            $new_user->FirstName = Convert::raw2sql(ucfirst($this->user_data['name']['first']));
+            $new_user->Surname = Convert::raw2sql(ucfirst($this->user_data['name']['last']));
+            $new_user->Email = Convert::raw2sql($this->user_data['email']);
+            $new_user->Cell = Convert::raw2sql($this->user_data['cell']);
+            $new_user->Photo = Convert::raw2sql($this->user_data['picture']['large']);
             $new_user->write();
-
-            var_dump('got into controller');
+            $this->new_user = $new_user;
 
             return $this->customise(
                 [
