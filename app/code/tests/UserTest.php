@@ -8,7 +8,9 @@ use SilverStripe\Dev\SapphireTest;
 use GuzzleHttp\Handler\MockHandler;
 use App\Controller\UserPageController;
 use SilverStripe\Core\Injector\Injector;
+use GuzzleHttp\Exception\RequestException;
 use SilverStripe\Control\HTTPResponse_Exception;
+use SilverStripe\Security\Member;
 
 class UserTests extends SapphireTest
 {
@@ -19,6 +21,7 @@ class UserTests extends SapphireTest
         parent::setUp();
         $this->history=[];
         $this->createMockMember();
+        $this->createMockData();
     }
 
     /**
@@ -27,6 +30,20 @@ class UserTests extends SapphireTest
      * @var array
      */
     protected $user_data;
+
+    /**
+     * Used to create mock data
+     *
+     * @var array
+     */
+    protected $data;
+
+    /**
+     * Used to create mock data
+     *
+     * @var array
+     */
+    protected $bad_data;
 
     /**
      * Create mock member
@@ -45,6 +62,36 @@ class UserTests extends SapphireTest
                 'large' => 'https://i.kym-cdn.com/entries/icons/original/000/023/879/dilolhijakestorteddd.jpg'
             ],
             'email' => 'big.shaq@mansnothot.com',
+        ];
+
+        $this->bad_data = [
+            'name' => [
+                'first' => 'Big',
+                'last' => 'Shaq',
+            ],
+            'cell' => '+642 987 7654',
+            'picture' => [
+                'large' => 'https://i.kym-cdn.com/entries/icons/original/000/023/879/dilolhijakestorteddd.jpg'
+            ],
+        ];
+    }
+
+    public function createMockData()
+    {
+        $this->data = [
+            'results' => [
+                            [
+                                'name' => [
+                                'first' => 'Big',
+                                'last' => 'Shaq',
+                                ],
+                                'cell' => '+642 987 7654',
+                                'picture' => [
+                                    'large' => 'https://i.kym-cdn.com/entries/icons/original/000/023/879/dilolhijakestorteddd.jpg'
+                                ],
+                                'email' => 'big.shaq@mansnothot.com',
+                            ]
+            ]
         ];
     }
 
@@ -73,12 +120,10 @@ class UserTests extends SapphireTest
      */
     public function testUpdateMember()
     {
-        var_dump($this->user_data);
         $c = UserPageController::create();
         $c->setUserData($this->user_data);
         $c->randomUser();
         $member = $c->getMember();
-        var_dump($member->FirstName);
 
         $this->assertEquals($member->FirstName, $this->user_data['name']['first']);
         $this->assertEquals($member->Surname, $this->user_data['name']['last']);
@@ -90,12 +135,59 @@ class UserTests extends SapphireTest
         $member->delete();
     }
 
-    public function testGetUserData()
+    public function test300Error()
     {
         $this->setMockResponses(301);
         $this->setExpectedException(HTTPResponse_Exception::class);
         $c = UserPageController::create();
         $c->getUserData();
-
     }
+
+    public function test400Error()
+    {
+        $this->setMockResponses(400);
+        $this->setExpectedException(RequestException::class);
+        $c = UserPageController::create();
+        $c->getUserData();
+    }
+
+    public function test500Error()
+    {
+        $this->setMockResponses(500);
+        $this->setExpectedException(RequestException::class);
+        $c = UserPageController::create();
+        $c->getUserData();
+    }
+
+    public function testDataResponse()
+    {
+        $this->setMockResponses('200', [], json_encode($this->data));
+        $c = UserPageController::create();
+        $result = $c->getUserData();
+        $this->assertEquals($result, $this->data['results'][0]);
+    }
+
+    public function testGetUsers()
+    {
+        $c = UserPageController::create();
+        $memberList = $c->getUsers();
+        $this->assertEquals(sizeof($memberList), sizeof(Member::get()));
+    }
+
+    // /**
+    //  * Member is created incorrectly
+    //  *
+    //  * @return void
+    //  */
+    // public function testBadMember()
+    // {
+    //     $c = UserPageController::create();
+    //     $c->setUserData($this->bad_data);
+    //     $c->randomUser();
+    //     $member = $c->getMember();
+
+    //     $this->setExpectedException(RequestException::class);
+
+    //     $member->delete();
+    // }
 }

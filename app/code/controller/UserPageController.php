@@ -28,17 +28,19 @@ class UserPageController extends PageController
     {
         try {
             $response = $this->client->get('https://randomuser.me/api/');
+            var_dump($response);
         } catch (Exception $e) {
-            $this->httpError($e->getCode(), $e->getMessage() );
+            var_dump("INCORRECT RESPONSE");
+            $this->httpError($e->getCode(), $e->getMessage());
         }
 
-
-        if($response->getStatusCode() != 200) {
+        if ($response->getStatusCode() != 200) {
             var_dump("Hello");
-            $this->httpError($response->getStatusCode(), $response->getReasonPhrase() );
+            $this->httpError($response->getStatusCode(), $response->getReasonPhrase());
         }
 
-
+        var_dump("WE GOT A RESPONSE");
+        var_dump(json_decode($response->getBody(), true)['results']);
         $data = json_decode($response->getBody(), true)['results'][0];
 
         if (empty($data)) {

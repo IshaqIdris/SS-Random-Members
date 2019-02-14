@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="UserTests" file="/var/www/mysite/www/app/code/tests/UserTest.php" tests="6" assertions="11" failures="0" errors="0" time="0.498336">
+    <testcase name="testUpdateMember" class="UserTests" file="/var/www/mysite/www/app/code/tests/UserTest.php" line="121" assertions="6" time="0.367892">
+      <system-out>/var/www/mysite/www/app/code/controller/UserPageController.php:108:
+string(21) "got in generate users"
+</system-out>
+    </testcase>
+    <testcase name="test300Error" class="UserTests" file="/var/www/mysite/www/app/code/tests/UserTest.php" line="138" assertions="1" time="0.072083">
+      <system-out>/var/www/mysite/www/app/code/controller/UserPageController.php:31:
+class GuzzleHttp\Psr7\Response#2974 (6) {
+  private $reasonPhrase =&gt;
+  string(17) "Moved Permanently"
+  private $statusCode =&gt;
+  int(301)
+  private $headers =&gt;
+  array(0) {
+  }
+  private $headerNames =&gt;
+  array(0) {
+  }
+  private $protocol =&gt;
+  string(3) "1.1"
+  private $stream =&gt;
+  NULL
+}
+/var/www/mysite/www/app/code/controller/UserPageController.php:38:
+string(5) "Hello"
+</system-out>
+    </testcase>
+    <testcase name="test400Error" class="UserTests" file="/var/www/mysite/www/app/code/tests/UserTest.php" line="146" assertions="1" time="0.027547"/>
+    <testcase name="test500Error" class="UserTests" file="/var/www/mysite/www/app/code/tests/UserTest.php" line="154" assertions="1" time="0.009788"/>
+    <testcase name="testDataResponse" class="UserTests" file="/var/www/mysite/www/app/code/tests/UserTest.php" line="162" assertions="1" time="0.007230">
+      <system-out>/var/www/mysite/www/app/code/controller/UserPageController.php:31:
+class GuzzleHttp\Psr7\Response#3265 (6) {
+  private $reasonPhrase =&gt;
+  string(2) "OK"
+  private $statusCode =&gt;
+  int(200)
+  private $headers =&gt;
+  array(0) {
+  }
+  private $headerNames =&gt;
+  array(0) {
+  }
+  private $protocol =&gt;
+  string(3) "1.1"
+  private $stream =&gt;
+  class GuzzleHttp\Psr7\Stream#1709 (7) {
+    private $stream =&gt;
+    resource(5092) of type (stream)
+    private $size =&gt;
+    NULL
+    private $seekable =&gt;
+    bool(true)
+    private $readable =&gt;
+    bool(true)
+    private $writable =&gt;
+    bool(true)
+    private $uri =&gt;
+    string(10) "php://temp"
+    private $customMetadata =&gt;
+    array(0) {
+    }
+  }
+}
+/var/www/mysite/www/app/code/controller/UserPageController.php:42:
+string(17) "WE GOT A RESPONSE"
+/var/www/mysite/www/app/code/controller/UserPageController.php:43:
+array(1) {
+  [0] =&gt;
+  array(4) {
+    'name' =&gt;
+    array(2) {
+      'first' =&gt;
+      string(3) "Big"
+      'last' =&gt;
+      string(4) "Shaq"
+    }
+    'cell' =&gt;
+    string(13) "+642 987 7654"
+    'picture' =&gt;
+    array(1) {
+      'large' =&gt;
+      string(81) "https://i.kym-cdn.com/entries/icons/original/000/023/879/dilolhijakestorteddd.jpg"
+    }
+    'email' =&gt;
+    string(23) "big.shaq@mansnothot.com"
+  }
+}
+</system-out>
+    </testcase>
+    <testcase name="testGetUsers" class="UserTests" file="/var/www/mysite/www/app/code/tests/UserTest.php" line="170" assertions="1" time="0.013796"/>
+  </testsuite>
+</testsuites>
